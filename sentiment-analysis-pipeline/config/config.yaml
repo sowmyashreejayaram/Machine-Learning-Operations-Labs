@@ -1,0 +1,31 @@
+data_generation:
+  num_messages: 1000
+  timestamp_range_hours: 72
+
+preprocessing:
+  min_text_length: 5
+  max_text_length: 500
+  lowercase: true
+
+sentiment_analysis:
+  models:
+    - vader
+    - textblob
+  vader:
+    compound_threshold: 0.05
+  textblob:
+    polarity_threshold: 0.1
+
+visualization:
+  color_scheme:
+    positive: "#2ecc71"
+    neutral: "#95a5a6"
+    negative: "#e74c3c"
+
+paths:
+  data_raw: "./data/raw"
+  data_processed: "./data/processed"
+  data_reports: "./data/reports"
+  visualizations: "./visualizations"
+  models: "./models"
+  logs: "./logs"

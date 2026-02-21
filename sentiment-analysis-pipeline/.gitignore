@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+venv/
+env/
+airflow.db
+airflow.cfg
+logs/
+*.log
+data/raw/*.csv
+data/processed/*.csv
+visualizations/*.png
+!.gitkeep
+.DS_Store
+.vscode/
