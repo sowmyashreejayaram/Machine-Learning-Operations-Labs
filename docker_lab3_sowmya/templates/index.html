@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breast Cancer Prediction API</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+               background: #0f172a; color: #e2e8f0; padding: 2rem; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #38bdf8; margin-bottom: 0.5rem; font-size: 1.8rem; }
+        h2 { color: #7dd3fc; margin: 1.5rem 0 0.5rem; font-size: 1.2rem; }
+        .subtitle { color: #94a3b8; margin-bottom: 2rem; }
+        .card { background: #1e293b; border-radius: 12px; padding: 1.5rem;
+                margin-bottom: 1.5rem; border: 1px solid #334155; }
+        code { background: #334155; padding: 2px 6px; border-radius: 4px;
+               font-size: 0.9rem; color: #7dd3fc; }
+        pre { background: #0f172a; border: 1px solid #334155; border-radius: 8px;
+              padding: 1rem; overflow-x: auto; margin-top: 0.5rem;
+              font-size: 0.85rem; line-height: 1.5; color: #cbd5e1; }
+        .endpoint { display: inline-block; background: #065f46; color: #6ee7b7;
+                    padding: 2px 8px; border-radius: 4px; font-weight: 600;
+                    font-size: 0.85rem; margin-right: 0.5rem; }
+        .nav { display: flex; gap: 1rem; margin-bottom: 2rem; }
+        .nav a { color: #38bdf8; text-decoration: none; padding: 0.5rem 1rem;
+                 border: 1px solid #334155; border-radius: 8px; }
+        .nav a:hover { background: #1e293b; }
+        .features-grid { display: grid; grid-template-columns: 1fr 1fr;
+                         gap: 0.25rem; font-size: 0.8rem; color: #94a3b8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Breast Cancer Prediction API</h1>
+        <p class="subtitle">Dockerized ML Model - RandomForest + StandardScaler Pipeline</p>
+
+        <div class="nav">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/health">Health Check</a>
+        </div>
+
+        <div class="card">
+            <h2><span class="endpoint">POST</span> /predict</h2>
+            <p>Send 30 numeric features to get a malignant / benign prediction.</p>
+            <pre>curl -X POST http://localhost:5000/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "features": [17.99, 10.38, 122.8, 1001.0, 0.1184,
+                 0.2776, 0.3001, 0.1471, 0.2419, 0.07871,
+                 1.095, 0.9053, 8.589, 153.4, 0.006399,
+                 0.04904, 0.05373, 0.01587, 0.03003, 0.006193,
+                 25.38, 17.33, 184.6, 2019.0, 0.1622,
+                 0.6656, 0.7119, 0.2654, 0.4601, 0.1189]
+  }'</pre>
+        </div>
+
+        <div class="card">
+            <h2><span class="endpoint">GET</span> /dashboard</h2>
+            <p>View model training metrics (accuracy, precision, recall, F1).</p>
+        </div>
+
+        <div class="card">
+            <h2><span class="endpoint">GET</span> /health</h2>
+            <p>Container health-check endpoint. Returns <code>{"status": "healthy"}</code>.</p>
+        </div>
+
+        <div class="card">
+            <h2>Expected Features (30)</h2>
+            <div class="features-grid">
+                {% for f in features %}
+                <span>{{ loop.index }}. {{ f }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

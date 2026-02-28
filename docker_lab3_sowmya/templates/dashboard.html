@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+               background: #0f172a; color: #e2e8f0; padding: 2rem; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #38bdf8; margin-bottom: 0.3rem; }
+        .subtitle { color: #94a3b8; margin-bottom: 2rem; }
+        .nav a { color: #38bdf8; text-decoration: none; margin-right: 1rem; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr);
+                        gap: 1rem; margin: 1.5rem 0; }
+        .metric-card { background: #1e293b; border-radius: 12px; padding: 1.2rem;
+                       text-align: center; border: 1px solid #334155; }
+        .metric-value { font-size: 2rem; font-weight: 700; color: #22d3ee; }
+        .metric-label { font-size: 0.85rem; color: #94a3b8; margin-top: 0.3rem; }
+        .bar-section { background: #1e293b; border-radius: 12px; padding: 1.5rem;
+                       border: 1px solid #334155; margin-bottom: 1.5rem; }
+        .bar-row { display: flex; align-items: center; margin: 0.6rem 0; }
+        .bar-label { width: 90px; font-size: 0.85rem; color: #94a3b8; }
+        .bar-track { flex: 1; height: 24px; background: #0f172a;
+                     border-radius: 6px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 6px; display: flex;
+                    align-items: center; padding-left: 8px; font-size: 0.8rem;
+                    font-weight: 600; transition: width 1s ease; }
+        .bar-fill.acc  { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+        .bar-fill.prec { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+        .bar-fill.rec  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .bar-fill.f1   { background: linear-gradient(90deg, #10b981, #34d399); }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr;
+                     gap: 1rem; margin-top: 1.5rem; }
+        .info-card { background: #1e293b; border-radius: 12px; padding: 1.2rem;
+                     border: 1px solid #334155; }
+        .info-card h3 { color: #7dd3fc; font-size: 0.95rem; margin-bottom: 0.5rem; }
+        .info-card p { color: #94a3b8; font-size: 0.85rem; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Model Performance Dashboard</h1>
+        <p class="subtitle">{{ metrics.dataset }} - {{ metrics.model_type }}</p>
+        <div class="nav" style="margin-bottom: 1.5rem;">
+            <a href="/">Back to API</a>
+            <a href="/health">Health</a>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value">{{ "%.1f"|format(metrics.accuracy * 100) }}%</div>
+                <div class="metric-label">Accuracy</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{{ "%.1f"|format(metrics.precision * 100) }}%</div>
+                <div class="metric-label">Precision</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{{ "%.1f"|format(metrics.recall * 100) }}%</div>
+                <div class="metric-label">Recall</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{{ "%.1f"|format(metrics.f1_score * 100) }}%</div>
+                <div class="metric-label">F1-Score</div>
+            </div>
+        </div>
+
+        <div class="bar-section">
+            <h3 style="color: #7dd3fc; margin-bottom: 1rem;">Metric Comparison</h3>
+            <div class="bar-row">
+                <span class="bar-label">Accuracy</span>
+                <div class="bar-track">
+                    <div class="bar-fill acc" style="width: {{ metrics.accuracy * 100 }}%">
+                        {{ "%.2f"|format(metrics.accuracy * 100) }}%
+                    </div>
+                </div>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">Precision</span>
+                <div class="bar-track">
+                    <div class="bar-fill prec" style="width: {{ metrics.precision * 100 }}%">
+                        {{ "%.2f"|format(metrics.precision * 100) }}%
+                    </div>
+                </div>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">Recall</span>
+                <div class="bar-track">
+                    <div class="bar-fill rec" style="width: {{ metrics.recall * 100 }}%">
+                        {{ "%.2f"|format(metrics.recall * 100) }}%
+                    </div>
+                </div>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">F1-Score</span>
+                <div class="bar-track">
+                    <div class="bar-fill f1" style="width: {{ metrics.f1_score * 100 }}%">
+                        {{ "%.2f"|format(metrics.f1_score * 100) }}%
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>Model Info</h3>
+                <p>
+                    <strong>Algorithm:</strong> {{ metrics.model_type }}<br>
+                    <strong>Features:</strong> {{ metrics.n_features }}<br>
+                    <strong>Pipeline:</strong> StandardScaler then RandomForest
+                </p>
+            </div>
+            <div class="info-card">
+                <h3>Data Split</h3>
+                <p>
+                    <strong>Training samples:</strong> {{ metrics.n_train }}<br>
+                    <strong>Testing samples:</strong> {{ metrics.n_test }}<br>
+                    <strong>Split ratio:</strong> 80 / 20
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
