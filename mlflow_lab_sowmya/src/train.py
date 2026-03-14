@@ -22,6 +22,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import (
     accuracy_score,
     f1_score,
@@ -67,7 +69,6 @@ def train_logistic_regression(X_train, X_test, y_train, y_test, feature_names):
             "C": 1.0,
             "max_iter": 1000,
             "solver": "lbfgs",
-            "multi_class": "multinomial",
             "random_state": 42,
         }
 
@@ -188,7 +189,6 @@ def train_xgboost(X_train, X_test, y_train, y_test, feature_names):
             "subsample": 0.8,
             "colsample_bytree": 0.8,
             "random_state": 42,
-            "use_label_encoder": False,
             "eval_metric": "mlogloss",
         }
 
@@ -197,12 +197,15 @@ def train_xgboost(X_train, X_test, y_train, y_test, feature_names):
         mlflow.set_tag("model_type", "XGBoost")
         mlflow.set_tag("author", "sowmya")
 
-        # Train
+        # Train (XGBoost needs labels starting from 0)
+        le = LabelEncoder()
+        y_train_encoded = le.fit_transform(y_train)
         model = XGBClassifier(**params)
-        model.fit(X_train, y_train)
+        model.fit(X_train, y_train_encoded)
 
-        # Predict & evaluate
-        y_pred = model.predict(X_test)
+        # Predict & evaluate (decode back to original labels)
+        y_pred_encoded = model.predict(X_test)
+        y_pred = le.inverse_transform(y_pred_encoded)
         metrics = {
             "accuracy": accuracy_score(y_test, y_pred),
             "f1_weighted": f1_score(y_test, y_pred, average="weighted"),
