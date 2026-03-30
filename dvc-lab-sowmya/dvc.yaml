@@ -1,0 +1,46 @@
+stages:
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+      - src/preprocess.py
+      - data/wine_quality.csv
+    params:
+      - preprocess.test_size
+      - preprocess.random_state
+      - preprocess.scale_features
+    outs:
+      - data/processed/X_train.csv
+      - data/processed/X_test.csv
+      - data/processed/y_train.csv
+      - data/processed/y_test.csv
+
+  train:
+    cmd: python src/train.py
+    deps:
+      - src/train.py
+      - data/processed/X_train.csv
+      - data/processed/y_train.csv
+    params:
+      - train.n_estimators
+      - train.max_depth
+      - train.min_samples_split
+      - train.random_state
+    outs:
+      - models/random_forest.pkl
+
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+      - src/evaluate.py
+      - models/random_forest.pkl
+      - data/processed/X_test.csv
+      - data/processed/y_test.csv
+    params:
+      - evaluate.generate_plots
+    metrics:
+      - results/metrics.json:
+          cache: false
+    plots:
+      - results/plots/feature_importance.csv:
+          x: feature
+          y: importance

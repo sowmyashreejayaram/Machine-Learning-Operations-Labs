@@ -1,0 +1,30 @@
+cmd: python src/evaluate.py
+deps:
+- path: data/processed/X_test.csv
+  hash: md5
+  md5: 002e554312ced5acb218483132f07583
+  size: 70957
+- path: data/processed/y_test.csv
+  hash: md5
+  md5: 52997ed677033cccf5874db23d054043
+  size: 648
+- path: models/random_forest.pkl
+  hash: md5
+  md5: fe720d11ce33b8733eaa3cb072432f8e
+  size: 1930801
+- path: src/evaluate.py
+  hash: md5
+  md5: 431edb9c8d0d4e186d13608eb4c7a2c1
+  size: 1505
+params:
+  params.yaml:
+    evaluate.generate_plots: true
+outs:
+- path: results/metrics.json
+  hash: md5
+  md5: bda2938e4753a3cdf4c7df9fcc5a27ec
+  size: 82
+- path: results/plots/feature_importance.csv
+  hash: md5
+  md5: d67bcfcdd71bbf8e44b99a47c0027b6d
+  size: 243

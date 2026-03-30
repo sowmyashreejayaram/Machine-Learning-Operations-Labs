@@ -1,0 +1,25 @@
+cmd: python src/train.py
+deps:
+- path: data/processed/X_train.csv
+  hash: md5
+  md5: 0022df0d608aac8b6f302e5848e4dc85
+  size: 282823
+- path: data/processed/y_train.csv
+  hash: md5
+  md5: 4040613523475448ce5a6170c18e383e
+  size: 2566
+- path: src/train.py
+  hash: md5
+  md5: 33792deb6ac3845e3e32667dbd208b4f
+  size: 1103
+params:
+  params.yaml:
+    train.max_depth: 10
+    train.min_samples_split: 5
+    train.n_estimators: 100
+    train.random_state: 42
+outs:
+- path: models/random_forest.pkl
+  hash: md5
+  md5: fe720d11ce33b8733eaa3cb072432f8e
+  size: 1930801

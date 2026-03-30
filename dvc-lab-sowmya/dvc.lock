@@ -1,0 +1,92 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+    - path: data/wine_quality.csv
+      hash: md5
+      md5: 76c8bcb8409b28525a47e6e14418e05e
+      size: 98405
+    - path: src/preprocess.py
+      hash: md5
+      md5: 3e50db77d55ff3132d56a85aa310bd63
+      size: 1621
+    params:
+      params.yaml:
+        preprocess.random_state: 42
+        preprocess.scale_features: true
+        preprocess.test_size: 0.2
+    outs:
+    - path: data/processed/X_test.csv
+      hash: md5
+      md5: 002e554312ced5acb218483132f07583
+      size: 70957
+    - path: data/processed/X_train.csv
+      hash: md5
+      md5: 0022df0d608aac8b6f302e5848e4dc85
+      size: 282823
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: 52997ed677033cccf5874db23d054043
+      size: 648
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: 4040613523475448ce5a6170c18e383e
+      size: 2566
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/processed/X_train.csv
+      hash: md5
+      md5: 0022df0d608aac8b6f302e5848e4dc85
+      size: 282823
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: 4040613523475448ce5a6170c18e383e
+      size: 2566
+    - path: src/train.py
+      hash: md5
+      md5: 33792deb6ac3845e3e32667dbd208b4f
+      size: 1103
+    params:
+      params.yaml:
+        train.max_depth: 10
+        train.min_samples_split: 5
+        train.n_estimators: 100
+        train.random_state: 42
+    outs:
+    - path: models/random_forest.pkl
+      hash: md5
+      md5: fe720d11ce33b8733eaa3cb072432f8e
+      size: 1930801
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - path: data/processed/X_test.csv
+      hash: md5
+      md5: 002e554312ced5acb218483132f07583
+      size: 70957
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: 52997ed677033cccf5874db23d054043
+      size: 648
+    - path: models/random_forest.pkl
+      hash: md5
+      md5: fe720d11ce33b8733eaa3cb072432f8e
+      size: 1930801
+    - path: src/evaluate.py
+      hash: md5
+      md5: 431edb9c8d0d4e186d13608eb4c7a2c1
+      size: 1505
+    params:
+      params.yaml:
+        evaluate.generate_plots: true
+    outs:
+    - path: results/metrics.json
+      hash: md5
+      md5: bda2938e4753a3cdf4c7df9fcc5a27ec
+      size: 82
+    - path: results/plots/feature_importance.csv
+      hash: md5
+      md5: d67bcfcdd71bbf8e44b99a47c0027b6d
+      size: 243
